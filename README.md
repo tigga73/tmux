@@ -1,40 +1,27 @@
-# .tmux.conf
+set -g default-terminal "screen-256color"
+set -g prefix C-s # changing the leader key to ctrl+s
+set -g base-index 1 # window numbers starting in 1
+set -g mouse on
+set -s escape-time 0 # Disable the delay when pressing <Esc> 
 
-```conf
 unbind r
 bind r source-file ~/.tmux.conf
 
-set -g prefix C-s
-set -g mouse on
+# split window in the current path
+bind-key % split-window -h -c "#{pane_current_path}"
+bind-key '"' split-window -v -c "#{pane_current_path}"
 
+# vim motions through the panes
 bind-key h select-pane -L
 bind-key j select-pane -D
 bind-key k select-pane -U
 bind-key l select-pane -R
 
-# List of plugins
-set -g @plugin 'tmux-plugins/tpm'
-set -g @plugin 'catppuccin/tmux'
+# vim-like visual mode
+bind -T copy-mode-vi v send-keys -X begin-selection
+bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'xclip -in -selection clipboard'
 
-set -g @catppuccin_window_left_separator ""
-set -g @catppuccin_window_right_separator " "
-set -g @catppuccin_window_middle_separator " █"
-set -g @catppuccin_window_number_position "right"
-
-set -g @catppuccin_window_default_fill "number"
-set -g @catppuccin_window_default_text "#W"
-
-set -g @catppuccin_window_current_fill "number"
-set -g @catppuccin_window_current_text "#W"
-
-set -g @catppuccin_status_modules_right "directory date_time"
-set -g @catppuccin_status_left_separator  " "
-set -g @catppuccin_status_right_separator ""
-set -g @catppuccin_status_fill "icon"
-set -g @catppuccin_status_connect_separator "no"
-
-set -g @catppuccin_directory_text "#{pane_current_path}"
-
-# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
-run '~/.tmux/plugins/tpm/tpm'
-```
+# bar
+set -g status-style 'bg=#24283b fg=#a9b1d6'
+set -g status-left '   #S | '
+set -g status-right ' #(whoami)@#H | #(date +%%H:%%M) '
